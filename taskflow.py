@@ -18,10 +18,18 @@ def cli():
 @click.argument('description')
 def add(description):
     """Adiciona uma nova tarefa"""
+    if not description.strip():
+        console.print("❌ Descrição não pode estar vazia", style="red")
+        return
+    
+    if len(description) > 200:
+        console.print("❌ Descrição muito longa (máximo 200 caracteres)", style="red")
+        return
+    
     tasks = load_tasks()
     task = {
         'id': get_next_id(tasks),
-        'description': description,
+        'description': description.strip(),
         'completed': False,
         'created_at': datetime.now().isoformat()
     }
@@ -52,9 +60,16 @@ def list():
 @click.argument('task_id', type=int)
 def complete(task_id):
     """Marca uma tarefa como concluída"""
+    if task_id <= 0:
+        console.print("❌ ID deve ser um número positivo", style="red")
+        return
+        
     tasks = load_tasks()
     for task in tasks:
         if task['id'] == task_id:
+            if task['completed']:
+                console.print(f"⚠️ Tarefa {task_id} já está concluída", style="yellow")
+                return
             task['completed'] = True
             save_tasks(tasks)
             console.print(f"✅ Tarefa {task_id} marcada como concluída!", style="green")
