@@ -102,11 +102,3 @@ Contribuições são bem-vindas! Sinta-se à vontade para:
 3. Fazer commit das mudanças
 4. Fazer push para a branch
 5. Abrir um Pull Request
-
-## 📝 Licença
-
-Este projeto é open source e está disponível sob a licença MIT.
-
----
-
-Desenvolvido com ❤️ para tornar o gerenciamento de tarefas mais eficiente e divertido!
