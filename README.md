@@ -103,8 +103,6 @@ Contribuições são bem-vindas! Sinta-se à vontade para:
 4. Fazer push para a branch
 5. Abrir um Pull Request
 
-
-
 ---
 
 Desenvolvido com ❤️ para tornar o gerenciamento de tarefas mais eficiente e divertido!
