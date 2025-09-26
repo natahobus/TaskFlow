@@ -72,5 +72,37 @@ def complete(task_id):
             return
     console.print(f"❌ Tarefa {task_id} não encontrada", style="red")
 
+@cli.command()
+@click.argument('task_id', type=int)
+def remove(task_id):
+    """Remove uma tarefa"""
+    tasks = load_tasks()
+    for i, task in enumerate(tasks):
+        if task['id'] == task_id:
+            removed_task = tasks.pop(i)
+            save_tasks(tasks)
+            console.print(f"🗑️ Tarefa removida: {removed_task['description']}", style="red")
+            return
+    console.print(f"❌ Tarefa {task_id} não encontrada", style="red")
+
+@cli.command()
+def stats():
+    """Mostra estatísticas das tarefas"""
+    tasks = load_tasks()
+    if not tasks:
+        console.print("📊 Nenhuma tarefa para mostrar estatísticas", style="yellow")
+        return
+    
+    total = len(tasks)
+    completed = sum(1 for task in tasks if task['completed'])
+    pending = total - completed
+    completion_rate = (completed / total) * 100 if total > 0 else 0
+    
+    console.print("\n📊 Estatísticas das Tarefas", style="bold blue")
+    console.print(f"Total: {total}")
+    console.print(f"Concluídas: {completed}", style="green")
+    console.print(f"Pendentes: {pending}", style="yellow")
+    console.print(f"Taxa de conclusão: {completion_rate:.1f}%", style="cyan")
+
 if __name__ == '__main__':
     cli()
