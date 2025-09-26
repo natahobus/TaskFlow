@@ -103,9 +103,7 @@ Contribuições são bem-vindas! Sinta-se à vontade para:
 4. Fazer push para a branch
 5. Abrir um Pull Request
 
-## 📝 Licença
 
-Este projeto é open source e está disponível sob a licença MIT.
 
 ---
 
