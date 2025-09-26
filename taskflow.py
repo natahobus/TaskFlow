@@ -125,6 +125,33 @@ def clear():
     console.print(f"🗑️ {len(completed_tasks)} tarefa(s) concluída(s) removida(s)", style="green")
 
 @cli.command()
+@click.argument('query')
+def search(query):
+    """Busca tarefas por palavra-chave"""
+    tasks = load_tasks()
+    if not tasks:
+        console.print("📝 Nenhuma tarefa encontrada", style="yellow")
+        return
+    
+    found_tasks = [task for task in tasks if query.lower() in task['description'].lower()]
+    
+    if not found_tasks:
+        console.print(f"🔍 Nenhuma tarefa encontrada com '{query}'", style="yellow")
+        return
+    
+    table = Table(title=f"Resultados para '{query}'")
+    table.add_column("ID", style="cyan")
+    table.add_column("Descrição", style="white")
+    table.add_column("Status", style="green")
+    
+    for task in found_tasks:
+        status = "✅ Concluída" if task['completed'] else "⏳ Pendente"
+        table.add_row(str(task['id']), task['description'], status)
+    
+    console.print(table)
+    console.print(f"\n📊 {len(found_tasks)} tarefa(s) encontrada(s)", style="cyan")
+
+@cli.command()
 def version():
     """Mostra a versão do aplicativo"""
     console.print(f"{APP_NAME} v{VERSION}", style="bold cyan")
