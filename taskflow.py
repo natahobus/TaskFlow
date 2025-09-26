@@ -5,10 +5,10 @@ import os
 from datetime import datetime
 from rich.console import Console
 from rich.table import Table
+from rich.panel import Panel
+from config import TASKS_FILE, APP_NAME, VERSION
 
 console = Console()
-
-TASKS_FILE = 'tasks.json'
 
 def load_tasks():
     if os.path.exists(TASKS_FILE):
@@ -22,7 +22,7 @@ def save_tasks(tasks):
 
 @click.group()
 def cli():
-    """TaskFlow - Gerenciador de tarefas via CLI"""
+    """TaskFlow - Gerenciador de tarefas via CLI 🚀"""
     pass
 
 @cli.command()
@@ -98,11 +98,32 @@ def stats():
     pending = total - completed
     completion_rate = (completed / total) * 100 if total > 0 else 0
     
-    console.print("\n📊 Estatísticas das Tarefas", style="bold blue")
-    console.print(f"Total: {total}")
-    console.print(f"Concluídas: {completed}", style="green")
-    console.print(f"Pendentes: {pending}", style="yellow")
-    console.print(f"Taxa de conclusão: {completion_rate:.1f}%", style="cyan")
+    stats_text = f"""Total: {total}
+Concluídas: [green]{completed}[/green]
+Pendentes: [yellow]{pending}[/yellow]
+Taxa de conclusão: [cyan]{completion_rate:.1f}%[/cyan]"""
+    
+    panel = Panel(stats_text, title="📊 Estatísticas", border_style="blue")
+    console.print(panel)
+
+@cli.command()
+def clear():
+    """Remove todas as tarefas concluídas"""
+    tasks = load_tasks()
+    completed_tasks = [task for task in tasks if task['completed']]
+    remaining_tasks = [task for task in tasks if not task['completed']]
+    
+    if not completed_tasks:
+        console.print("🗑️ Nenhuma tarefa concluída para remover", style="yellow")
+        return
+    
+    save_tasks(remaining_tasks)
+    console.print(f"🗑️ {len(completed_tasks)} tarefa(s) concluída(s) removida(s)", style="green")
+
+@cli.command()
+def version():
+    """Mostra a versão do aplicativo"""
+    console.print(f"{APP_NAME} v{VERSION}", style="bold cyan")
 
 if __name__ == '__main__':
     cli()
