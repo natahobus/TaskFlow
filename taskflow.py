@@ -1,24 +1,13 @@
 #!/usr/bin/env python3
 import click
-import json
-import os
 from datetime import datetime
 from rich.console import Console
 from rich.table import Table
 from rich.panel import Panel
-from config import TASKS_FILE, APP_NAME, VERSION
+from config import APP_NAME, VERSION
+from utils import load_tasks, save_tasks, get_next_id
 
 console = Console()
-
-def load_tasks():
-    if os.path.exists(TASKS_FILE):
-        with open(TASKS_FILE, 'r') as f:
-            return json.load(f)
-    return []
-
-def save_tasks(tasks):
-    with open(TASKS_FILE, 'w') as f:
-        json.dump(tasks, f, indent=2)
 
 @click.group()
 def cli():
@@ -31,7 +20,7 @@ def add(description):
     """Adiciona uma nova tarefa"""
     tasks = load_tasks()
     task = {
-        'id': len(tasks) + 1,
+        'id': get_next_id(tasks),
         'description': description,
         'completed': False,
         'created_at': datetime.now().isoformat()
